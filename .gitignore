@@ -1,0 +1,4 @@
+demultiplexed_seqs/
+*.qza
+*.qzv
+*.tsv
