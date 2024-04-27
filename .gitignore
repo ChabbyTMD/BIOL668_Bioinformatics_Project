@@ -3,3 +3,5 @@ core-metrics-results/
 *.qza
 *.qzv
 *.tsv
+__MACOSX/
+cell_cycle_vignette_files.zip?dl=1
