@@ -133,7 +133,10 @@ ifnb <- AddMetaData(ifnb, metadata = info)
 
 # remove cells without donor IDs
 ifnb$donor_id[is.na(ifnb$donor_id)] <- "unknown"
-ifnb <- subset(ifnb, subset = donor_id != "unknown")
+# Below this errors out:
+# Error in validObject(object = x) : 
+  # invalid class “Assay” object: slots in class definition but not in object: "assay.orig"
+# ifnb <- subset(ifnb, subset = donor_id != "unknown")
 ```
 
 ```{r}
