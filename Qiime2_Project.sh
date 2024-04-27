@@ -18,6 +18,8 @@ qiime metadata tabulate \
   --m-input-file metadata.tsv \
   --o-visualization metadata.qzv
 
+#   Importing data into QIIME 2
+
 #   Downloading the mouse sequence manifest tsv file.
 wget \
   -O "manifest.tsv" \
@@ -44,7 +46,7 @@ qiime demux summarize \
   --o-visualization ./demux_seqs.qzv
 
   
-
+#   Question.
 # After demultiplexing, which sample has the lowest sequencing depth?
 # recip.460.WT.HC3.D14
 
@@ -57,6 +59,9 @@ qiime demux summarize \
 # If you are working on this tutorial alongside someone else, why does your plot look slightly different from your neighbors? If you aren’t working alongside someone else, try running this command a few times and compare the results.
 
 # Read trimming since full length of read is of good quality
+
+
+# Sequence quality control and feature table
 qiime dada2 denoise-single \
   --i-demultiplexed-seqs ./demux_seqs.qza \
   --p-trunc-len 150 \
@@ -77,6 +82,7 @@ qiime feature-table summarize \
 
 
 
+# Question
 
 # How many total features remain after denoising?
 # 287 Features remain.
@@ -92,6 +98,9 @@ qiime feature-table summarize \
 
 # Which sample has the fewest features? How many does it have?
 # The sample recip.460.WT.HC3.D49 has the fewest features with only 347
+
+# Generating a phylogenetic tree for diversity analysis
+
 
 #   Download reference database for the phylogentic step
 wget \
@@ -137,9 +146,6 @@ qiime diversity alpha-rarefaction \
   --p-min-depth 10 \
   --p-max-depth 2500
 
-#     TODO
-
-#     Which mice did the missing samples come from?
 
 
 #   Diversity analysis
@@ -149,6 +155,8 @@ qiime diversity core-metrics-phylogenetic \
   --m-metadata-file ./metadata.tsv \
   --p-sampling-depth 2000 \
   --output-dir ./core-metrics-results
+
+# Question
 
 # Where did we get the value 2000 from? Why did we pick that?
 # This is the rarefaction depth that achieves saturation and preserves the highest number of samples.
@@ -163,6 +171,8 @@ qiime diversity alpha-group-significance \
  --i-alpha-diversity ./core-metrics-results/evenness_vector.qza \
  --m-metadata-file ./metadata.tsv \
  --o-visualization ./core-metrics-results/evenness_statistics.qzv
+
+# Question
 
 # Is there a difference in evenness between genotype? Is there a difference in phylogenetic diversity between genotype?
 # There is no difference in eveness between genotype (H=0.435, p=0.50). Additionally, there is no difference in phylogenetic diversity between genotype (H=2.347, p=0.125)
@@ -199,10 +209,12 @@ qiime diversity beta-group-significance \
   --m-metadata-column donor \
   --o-visualization core-metrics-results/weighted-unifrac-donor-significance.qzv
 
-    # Is there a significant effect of donor?
+# Question 
+
+# Is there a significant effect of donor?
 # There is a significant effect of donor in both the unweighted(pseudo-F=19.88, p=0.001) and weighted(pseudo-F=18.08, p=0.001) unifrac distance measures.
 
-    # From the metadata, we know that cage C31, C35, and C42 all house mice transplanted from one donor, and that cages C43, C44, and C49 are from the other. Is there a significant difference in the microbial communities between samples collected in cage C31 and C35? How about between C31 and C43? Do the results look the way you expect, based on the boxplots for donor?
+# From the metadata, we know that cage C31, C35, and C42 all house mice transplanted from one donor, and that cages C43, C44, and C49 are from the other. Is there a significant difference in the microbial communities between samples collected in cage C31 and C35? How about between C31 and C43? Do the results look the way you expect, based on the boxplots for donor?
 
 # Looking at the boxplots for the weighted unifrac distance cage measures we see that there is not a significant difference in cages C31 and C35 but a not so significant difference in median microbial community composition in cages C31 and C43. In the unweighted unifrac distance we can see a significant difference in the microbial communities between C31 and C43, while there was not a significant difference in the interquartile range of C31 and C35. The results appear as what we expect in the unweighted unifrac distance plot while the weighted unifrac plot deviates from our expectations by not clearly showing the difference in microbial communities in cage C31 and C43.
 
@@ -228,6 +240,8 @@ qiime diversity beta-group-significance \
   --o-visualization core-metrics-results/weighted-unifrac-cage-significance_disp.qzv \
   --p-method permdisp
 
+# Question
+
 # Is there a significant difference in variance for any of the cages?
 # There is not a significant difference in the variance of the cages (F=1.156883,p=0.235)
 
@@ -236,6 +250,8 @@ qiime diversity adonis \
   --m-metadata-file metadata.tsv \
   --o-visualization core-metrics-results/unweighted_adonis.qzv \
   --p-formula genotype+donor
+
+# Question
 
 # If you adjust for donor in the adonis model, do you retain an effect of genotype? What percentage of the variation does genotype explain?
 # In the adjusted model we retain a significant effect of genotype(p=0.011). Additionally, we see genotype explains 4% of variation in our model.
@@ -263,6 +279,7 @@ qiime feature-table tabulate-seqs \
   --o-visualization ./dada2_rep_set.qzv
 
 
+# Question
 
 # Find the feature, 07f183edd4e4d8aef1dcb2ab24dd7745. What is the taxonomic classification of this sequence? What’s the confidence for the assignment?
 # 	k__Bacteria; p__Firmicutes; c__Clostridia; o__Clostridiales; f__Christensenellaceae; is the taxon of the feature with a confidence of 98.3%
@@ -288,6 +305,8 @@ qiime taxa barplot \
   --m-metadata-file ./metadata.tsv \
   --o-visualization ./taxa_barplot.qzv
 
+# Question
+
 # Visualize the data at level 2 (phylum level) and sort the samples by donor, then by genotype. Can you observe a consistent difference in phylum between the donors? Does this surprise you? Why or why not?
 # There is a difference in the composition between the HC and the PD donors. The HC donors seem to have more phyla of batceria present than the PD donors. Interestingly samples from PD donors seem to be nearly devoid of the Verrucomicrobia and Actinobacteria phyla of bacteria. When we look at the barplots that catergorize based on genotype we notice presence of Actinobacteria bacteria in both susceptible and wildtype individuals. However we do see greater abundance of Verrucomicrobia in susceptible individuals.
 
@@ -303,7 +322,8 @@ qiime feature-table filter-features \
 # Plugin error from composition:
 
 #   An error was encountered while running ANCOM-BC in R (return code 1), please inspect stdout and stderr to learn more.
-# # check whether there is a difference in the gut microbiome of the mice based on their donor and their genetic background. 
+# # check whether there is a difference in the gut microbiome of the mice based on their donor and their genetic background.
+
 # qiime composition ancombc \
 #   --i-table ./table_2k_abund.qza \
 #   --m-metadata-file ./metadata.tsv \
@@ -421,6 +441,7 @@ qiime feature-table tabulate-seqs \
 
 # PCoA-based analyses
 
+# Question
     # Open the unweighted UniFrac emperor plot and color the samples by mouse id. Click on the “animations” tab and animate using the day_post_transplant as your gradient and mouse_id as your trajectory. Do you observe any clear temporal trends based on the PCoA?
     # The trajectyories seem to be centered within the clustered, aside from one that traverses into another cluster.
 
@@ -455,6 +476,7 @@ qiime longitudinal first-distances \
   --p-default-metric Distance \
   --p-default-group-column 'donor_status' \
   --o-visualization ./from_first_unifrac_vol.qzv
+  
 # Question
   # Based on the volatility plot, does one donor change more over time than the other? What about by genotype? Cage?
   # Ther seems to be an overall upward trend with healthy donors and a downward trend for PD donors. There also seems to be an upward trend for all cage ID's except C44 and C49 which show a downward trend. Wildtype trends upward while susceptible trends upwards for about 5 days and plateaus.
