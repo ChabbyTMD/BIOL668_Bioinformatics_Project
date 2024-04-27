@@ -1,4 +1,5 @@
 demultiplexed_seqs/
+core-metrics-results/
 *.qza
 *.qzv
 *.tsv
